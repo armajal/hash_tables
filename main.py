@@ -1,24 +1,3 @@
-# Hash function to convert string to a number
-def hash_string(mystr):
-
-    a = 676757484
-    b = 17
-    p = 3571
-    m = 1000
-
-    num = 0
-    for idx, char in enumerate(mystr):
-        num += ord(mystr[0]) * idx
-
-    myhash = (((a * num) + b) % p) % m
-    return myhash
-
-print(hash_string('fjk'))
-
-
-
-
-
 # Implement hash tables in 3 different ways
 
 # Use python dictionary
@@ -32,9 +11,6 @@ class OurDictionary():
     def remove_key(self, key):
         del self.dict[key]
 
-# od = OurDictionary()
-# od.add_key_value_pair('test',12)
-# od.remove_key('test')
 
 # Use array
 class OurDictionary2():
@@ -55,12 +31,6 @@ class OurDictionary2():
         for i in self.dict:
             if i[0] == key:
                 self.dict.remove(i)
-
-# od2 = OurDictionary2()
-# od2.add_key_value_pair('test2',14)
-# od2.add_key_value_pair('test2',1343)
-# print(od2.get_value('test2'))
-# od2.remove_key('test2')
 
 
 def get_fancy_index(ourlist, key):
@@ -97,10 +67,66 @@ class OurDictionary3():
                 break
         print(self.dict)
 
+
+
+# Use open addressing
+class HashTable():
+    INITIAL_SIZE = 20
+    def __init__(self):
+        self.array = [None] * self.INITIAL_SIZE
+
+    # Hash function to convert string to a number
+    def hash_string(self, mystr):
+        a = 676757484
+        b = 17
+        p = 3571
+        m = self.INITIAL_SIZE
+        num = 0
+        for idx, char in enumerate(mystr):
+            num += ord(char) * idx
+
+        myhash = (((a * num) + b) % p) % m
+        return myhash
+    def hash_string2(self, mystr):
+        a = 3636363
+        b = 3434
+        p = 3571
+        m = self.INITIAL_SIZE
+        num = 0
+        for idx, char in enumerate(mystr):
+            num += ord(char) * idx
+        myhash = (((a * num) + b) % p) % m
+        return myhash
+    def add_key_value_pair(self, key, val):
+        idx = self.hash_string(key)
+        i = 0
+        while ((self.array[idx] is not None) and (self.array[idx]) and (self.array[idx][0] != key)):
+            idx = (self.hash_string(key) + i * self.hash_string2(key)) % self.INITIAL_SIZE
+            i += 1
+        self.array[idx] = (key,val)
+    def get_value(self, key):
+        idx = self.hash_string(key)
+        i = 0
+        while ((self.array[idx] is not None) and ((self.array[idx] == ()) or (self.array[idx][0] != key))):
+            idx = (self.hash_string(key) + i * self.hash_string2(key)) % self.INITIAL_SIZE
+            i += 1
+        if (self.array[idx] is None):
+            raise KeyError
+        else:
+            return self.array[idx][1]
+
+    def remove_key(self, key):
+        idx = self.hash_string(key)
+        i = 0
+        while ((self.array[idx] is not None) and (self.array[idx][0] != key)):
+            idx = (self.hash_string(key) + i * self.hash_string2(key)) % self.INITIAL_SIZE
+            i += 1
+        # If found, remove the key and leave a tombstone -> ()
+        if (self.array[idx][0] == key):
+            self.array[idx] = ()
+
+
 if __name__ == '__main__':
-    od3 = OurDictionary3()
-    # tup_list = [('a', 1), ('c', 1),('d', 1)]
-    # print(get_fancy_index(tup_list, "b"))
-
-
-
+    ht = HashTable()
+    ht.add_key_value_pair('test',232)
+    print(ht.array)
