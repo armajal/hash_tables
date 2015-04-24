@@ -1,3 +1,24 @@
+# Hash function to convert string to a number
+def hash_string(mystr):
+
+    a = 676757484
+    b = 17
+    p = 3571
+    m = 1000
+
+    num = 0
+    for idx, char in enumerate(mystr):
+        num += ord(mystr[0]) * idx
+
+    myhash = (((a * num) + b) % p) % m
+    return myhash
+
+print(hash_string('fjk'))
+
+
+
+
+
 # Implement hash tables in 3 different ways
 
 # Use python dictionary
